@@ -1,1 +1,15 @@
+body { font-family: Arial, sans-serif; background: #f0f8ff; color: #333; margin:0; }
+header { background: #004080; color:white; padding: 15px; display:flex; justify-content:space-between; align-items:center; }
+header h1 { margin:0; }
+nav a { color:white; margin:0 10px; text-decoration:none; font-weight:bold; }
+nav a:hover { text-decoration:underline; }
+h2 { color:#004080; margin-top:30px; text-align:center; }
+.book-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap:15px; padding:20px; }
+.book-grid div { background:white; padding:10px; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1); text-align:center; transition: transform 0.3s, box-shadow 0.3s; }
+.book-grid div:hover { transform: translateY(-5px); box-shadow:0 8px 16px rgba(0,0,0,0.2); }
+button { padding:8px 12px; border:none; background:#004080; color:white; border-radius:5px; cursor:pointer; transition: background 0.3s; }
+button:hover { background:#0066cc; }
+table { width:100%; border-collapse:collapse; margin-top:10px; }
+th, td { border:1px solid #ccc; padding:8px; text-align:left; }
+th { background:#004080; color:white; }
 
