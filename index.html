@@ -14,9 +14,7 @@
 </head>
 <body>
 
-  <!-- snow + background overlay is done in CSS -->
-
-  <!-- decorative Christmas tree -->
+  <!-- Snow + Christmas tree -->
   <svg class="christmas-tree" viewBox="0 0 120 180" aria-hidden="true">
     <defs>
       <linearGradient id="g" x1="0" x2="1">
@@ -28,9 +26,9 @@
       <polygon points="60,6 90,54 66,54 100,104 74,104 106,154 60,110 14,154 46,104 20,104 54,54 30,54" />
     </g>
   </svg>
-
   <div class="snow" aria-hidden="true"></div>
 
+  <!-- Header -->
   <header>
     <div class="logo-title" role="banner">
       <h1>PEOPLES BANK LIBRARY</h1>
@@ -39,9 +37,7 @@
 
     <nav id="main-nav" aria-label="Primary">
       <a href="#home">Home</a>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScD4MBgjJi0P2nsQ5KNh3lIrhI6FE49zUB242vqYKGieG_2UA/viewform?usp=publish-editor" target="_blank" rel="noopener">
-        New Patron
-      </a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScD4MBgjJi0P2nsQ5KNh3lIrhI6FE49zUB242vqYKGieG_2UA/viewform?usp=publish-editor" target="_blank" rel="noopener">New Patron</a>
       <a href="#rules">Rules</a>
       <a href="#notice-contact">Notice</a>
       <a href="#contact">Contact</a>
@@ -63,46 +59,27 @@
       <div class="accordion">
         <div class="acc-item">
           <div class="acc-head" onclick="toggleAcc(this)">
-            <h4>Membership Procedure</h4>
-            <span>▾</span>
+            <h4>Membership Procedure</h4><span>▾</span>
           </div>
-          <div class="acc-body">
-            Application forms should be duly completed and signed for registration as a member of the library.
-            Any change of address or transfers should be informed to the Manager - Documentation Unit immediately.
-          </div>
+          <div class="acc-body">Application forms should be duly completed and signed...</div>
         </div>
-
         <div class="acc-item">
           <div class="acc-head" onclick="toggleAcc(this)">
-            <h4>Library Tickets & Lending</h4>
-            <span>▾</span>
+            <h4>Library Tickets & Lending</h4><span>▾</span>
           </div>
-          <div class="acc-body">
-            Members will be issued two Borrowers Cards for books and three for periodicals. Officers Grade I and above receive three additional cards.
-            Two books may be borrowed for one month. No telephone extensions. Periodicals follow the same rules.
-          </div>
+          <div class="acc-body">Members will be issued two Borrowers Cards...</div>
         </div>
-
         <div class="acc-item">
           <div class="acc-head" onclick="toggleAcc(this)">
-            <h4>Overdue & Loss</h4>
-            <span>▾</span>
+            <h4>Overdue & Loss</h4><span>▾</span>
           </div>
-          <div class="acc-body">
-            A fine of Rs.10 per day up to 14 days is charged for overdue books. A further 30-day grace period is given to replace the book.
-            After that, current cost plus a 25% surcharge will be debited from the member's salary.
-          </div>
+          <div class="acc-body">A fine of Rs.10 per day up to 14 days is charged...</div>
         </div>
-
         <div class="acc-item">
           <div class="acc-head" onclick="toggleAcc(this)">
-            <h4>Care of Materials</h4>
-            <span>▾</span>
+            <h4>Care of Materials</h4><span>▾</span>
           </div>
-          <div class="acc-body">
-            Members must handle books carefully and should not mark, scribble or damage them.
-            Any pre-existing damage must be reported before borrowing to avoid responsibility.
-          </div>
+          <div class="acc-body">Members must handle books carefully...</div>
         </div>
       </div>
     </section>
@@ -113,9 +90,7 @@
         <div class="notice-card">
           <h3 class="sub-heading">Notices</h3>
           <ul>
-            <li>
-              DECLARATION – I being a registered member of the People's Bank Library agree to abide by the rules and regulations and to be responsible for materials lent to me.
-            </li>
+            <li>DECLARATION – I being a registered member...</li>
             <li>Library closes at 5 PM.</li>
             <li>New arrivals updated monthly.</li>
           </ul>
@@ -125,11 +100,7 @@
           <div class="contact-card" id="contact">
             <h3 class="sub-heading">Contact</h3>
             <p>Developer: <strong>Vishal Bandara</strong></p>
-            <p>
-              <a href="https://vishal-bandara.github.io/vishalbandara/" target="_blank" rel="noopener">
-                About Developer
-              </a>
-            </p>
+            <p><a href="https://vishal-bandara.github.io/vishalbandara/" target="_blank">About Developer</a></p>
             <p>Library Manager: <strong>Menaka Hadunpathirana</strong></p>
           </div>
 
@@ -137,7 +108,6 @@
             <h3 class="sub-heading">Admin</h3>
             <p class="admin-text">Login to review and manage reservations.</p>
             <button onclick="adminLogin()">Admin Login</button>
-
             <div id="admin-panel" style="margin-top:12px; display:none;">
               <h4 class="admin-sub">Reservations</h4>
               <div id="reservation-wrapper">
@@ -149,9 +119,7 @@
       </div>
     </section>
 
-    <footer>
-      © PEOPLES BANK LIBRARY · <span id="year"></span>
-    </footer>
+    <footer>© PEOPLES BANK LIBRARY · <span id="year"></span></footer>
   </main>
 
   <!-- JS -->
