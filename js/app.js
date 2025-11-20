@@ -89,13 +89,60 @@ async function showReservations(){
   snapshot.forEach(doc=>{
     const data = doc.data();
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${data.title}</td>
-                    <td>${data.staffId}</td>
-                    <td>${data.phone}</td>
-                    <td>${data.reservedAt.toDate().toLocaleString()}</td>
-                    <td><button onclick="resetReservation('${doc.id}', ${data.bookId})">Reset</button></td>`;
+    tr.innerHTML = `
+  <td>${data.title}</td>
+  <td>${data.staffId}</td>
+  <td>${data.phone}</td>
+  <td>${dateText}</td>
+  <td>
+    <button onclick="editBookTitle('${doc.id}', ${data.bookId})">Edit</button>
+    <button onclick="resetReservation('${doc.id}', ${data.bookId})">Reset</button>
+  </td>
+`;
     table.appendChild(tr);
   });
+}
+// Admin edit book title
+async function editBookTitle(docId, bookId) {
+  const docRef = db.collection("reservations").doc(docId);
+  const docSnap = await docRef.get();
+
+  if (!docSnap.exists) {
+    alert("Reservation not found!");
+    return;
+  }
+
+  const data = docSnap.data();
+  const currentTitle = data.title || ("Book " + bookId);
+
+  const newTitle = prompt("Enter new book name:", currentTitle);
+  if (!newTitle || newTitle.trim() === "") {
+    return;
+  }
+  // Update Firestore document
+  await docRef.update({
+    title: newTitle.trim()
+  });
+
+  // Update main page display (book card)
+  const bookCards = document.querySelectorAll("#book-list div");
+  bookCards.forEach(card => {
+    const btn = card.querySelector("button");
+    if (!btn) return;
+
+    const idStr = btn.id.replace("btn-", ""); // "btn-3" -> "3"
+    const idNum = parseInt(idStr, 10);
+    if (idNum === bookId) {
+      const titleElement = card.querySelector("h3");
+      if (titleElement) {
+        titleElement.textContent = newTitle.trim();
+      }
+    }
+  });
+
+  // Refresh admin table
+  showReservations();
+  alert("Book name updated successfully!");
 }
 
 // Admin reset function
