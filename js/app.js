@@ -12,11 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function toggleMenu() {
   const nav = document.getElementById("main-nav");
   if (!nav) return;
-  if (nav.style.display === "flex") {
-    nav.style.display = "none";
-  } else {
-    nav.style.display = "flex";
-  }
+  nav.style.display = nav.style.display === "flex" ? "none" : "flex";
 }
 
 function toggleAcc(head) {
@@ -58,7 +54,7 @@ for (let i = 1; i <= 20; i++) {
   books.push({
     id: i,
     title: `Book ${i}`,
-    image: `../images/book${i}.jpg`.replace("../", "images/"), // keep it simple
+    image: `images/book${i}.jpg`, // fixed path
   });
 }
 
@@ -88,7 +84,7 @@ async function renderBooks() {
     card.setAttribute("data-id", book.id);
 
     card.innerHTML = `
-      <img src="${book.image}" alt="${escapeHtml(book.title)}" 
+      <img src="${book.image}" alt="${escapeHtml(book.title)}"
            onerror="this.src='https://via.placeholder.com/200x260?text=No+Image'">
       <h3>${escapeHtml(book.title)}</h3>
       <button id="btn-${book.id}">${reservedMap[book.id] ? "Already Reserved" : "Reserve"}</button>
@@ -161,15 +157,11 @@ function adminLogin() {
 
   if (username === ADMIN_USER && password === ADMIN_PASS) {
     const panel = document.getElementById("admin-panel");
-    if (panel) {
-      panel.style.display = "block";
-    }
+    if (panel) panel.style.display = "block";
     showReservations();
 
     const adminCard = document.getElementById("admin-card");
-    if (adminCard) {
-      adminCard.scrollIntoView({ behavior: "smooth" });
-    }
+    if (adminCard) adminCard.scrollIntoView({ behavior: "smooth" });
   } else {
     alert("Wrong credentials!");
   }
@@ -270,25 +262,17 @@ async function editBookTitle(docId, bookId) {
 
     const cleaned = newTitle.trim();
 
-    // Update reservation
     await docRef.update({ title: cleaned });
 
-    // Update local book title
     const book = books.find((b) => b.id === bookId);
-    if (book) {
-      book.title = cleaned;
-    }
+    if (book) book.title = cleaned;
 
-    // Update book card on the page
-    const card = document.querySelector(
-      `#book-list .book-card[data-id="${bookId}"]`
-    );
+    const card = document.querySelector(`#book-list .book-card[data-id="${bookId}"]`);
     if (card) {
       const titleEl = card.querySelector("h3");
       if (titleEl) titleEl.textContent = cleaned;
     }
 
-    // Refresh reservation table
     await showReservations();
     alert("Book name updated successfully!");
   } catch (err) {
@@ -306,10 +290,7 @@ async function resetReservation(docId, bookId) {
   try {
     await db.collection("reservations").doc(docId).delete();
 
-    // Update book button on main page
-    const card = document.querySelector(
-      `#book-list .book-card[data-id="${bookId}"]`
-    );
+    const card = document.querySelector(`#book-list .book-card[data-id="${bookId}"]`);
     if (card) {
       const btn = card.querySelector("button");
       if (btn) {
