@@ -1,47 +1,129 @@
 /* ---------------- Body & Typography ---------------- */
 body { 
   font-family: Arial, sans-serif; 
-  background: #f0f8ff; 
+  background: #1b1b1b; 
   color: #333; 
   margin:0; 
   padding:0;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Liquid / gradient animated background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 0% 0%, #ffeb3b55, transparent 60%),
+              radial-gradient(circle at 100% 0%, #ff572255, transparent 65%),
+              radial-gradient(circle at 0% 100%, #ff174455, transparent 65%),
+              radial-gradient(circle at 100% 100%, #ffc10755, transparent 60%);
+  mix-blend-mode: screen;
+  z-index: -2;
+  animation: liquidMove 18s infinite alternate ease-in-out;
+}
+
+@keyframes liquidMove {
+  0% {
+    transform: translate3d(0,0,0) scale(1);
+  }
+  50% {
+    transform: translate3d(-10px,10px,0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(10px,-10px,0) scale(1.02);
+  }
+}
+
+/* Soft overlay to keep content readable */
+body::after {
+  content:"";
+  position: fixed;
+  inset:0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.8));
+  z-index:-1;
 }
 
 h1, h2, h3 {
   margin: 10px 0;
+  color:#fff;
 }
 
 h2 { 
-  color:#004080; 
+  color:#ffeb3b; 
   margin-top:30px; 
   text-align:center; 
+  text-shadow: 0 0 6px rgba(0,0,0,0.8);
 }
 
 /* ---------------- Header & Navigation ---------------- */
 header { 
-  background: #004080; 
+  background: linear-gradient(90deg, #b71c1c, #e53935, #ffb300); 
   color:white; 
-  padding: 15px; 
+  padding: 15px 20px; 
   display:flex; 
   justify-content:space-between; 
   align-items:center; 
   flex-wrap: wrap;
+  box-shadow:0 4px 10px rgba(0,0,0,0.4);
+  position: sticky;
+  top:0;
+  z-index:20;
 }
 
-header h1 { 
+.logo-title h1 { 
   margin:0; 
   font-size: 1.8rem;
+  letter-spacing: 2px;
+}
+
+.tagline {
+  margin:0;
+  font-size:0.9rem;
+  color:#fffde7;
+  text-transform:uppercase;
+}
+
+/* Christmas sparkle on title */
+.logo-title h1 {
+  text-shadow: 0 0 8px rgba(255,255,255,0.7),
+               0 0 15px rgba(255,235,59,0.8);
+}
+
+/* Nav */
+nav {
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
 nav a { 
   color:white; 
-  margin:0 10px; 
+  margin:0 5px; 
   text-decoration:none; 
   font-weight:bold; 
+  padding:6px 10px;
+  border-radius:20px;
+  background: rgba(0,0,0,0.2);
+  border:1px solid rgba(255,255,255,0.5);
+  transition: background 0.3s, transform 0.2s;
+  font-size:0.95rem;
 }
 
 nav a:hover { 
-  text-decoration:underline; 
+  background: rgba(255,235,59,0.9);
+  color:#b71c1c;
+  transform: translateY(-2px);
+}
+
+/* Hamburger button */
+.hamburger {
+  display:none;
+  font-size: 1.5rem;
+  background: transparent;
+  border:none;
+  color:#fffde7;
+  cursor:pointer;
 }
 
 /* ---------------- Book Grid ---------------- */
@@ -53,40 +135,52 @@ nav a:hover {
 }
 
 .book-grid div { 
-  background:white; 
+  background:rgba(255,255,255,0.1); 
   padding:10px; 
-  border-radius:10px; 
-  box-shadow:0 4px 8px rgba(0,0,0,0.1); 
+  border-radius:15px; 
+  box-shadow:0 4px 10px rgba(0,0,0,0.6); 
   text-align:center; 
-  transition: transform 0.3s, box-shadow 0.3s; 
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s; 
+  border:1px solid rgba(255,235,59,0.5);
+  backdrop-filter: blur(6px);
 }
 
 .book-grid div:hover { 
-  transform: translateY(-5px); 
-  box-shadow:0 8px 16px rgba(0,0,0,0.2); 
+  transform: translateY(-6px); 
+  box-shadow:0 8px 18px rgba(0,0,0,0.9);
+  background:rgba(255,255,255,0.18);
 }
 
 .book-grid img { 
   width: 100%; 
   height: auto; 
-  border-radius:5px; 
+  border-radius:8px; 
 }
 
 /* ---------------- Buttons ---------------- */
 button { 
   padding:8px 12px; 
   border:none; 
-  background:#004080; 
-  color:white; 
-  border-radius:5px; 
+  background:#ffb300; 
+  color:#b71c1c; 
+  border-radius:20px; 
   cursor:pointer; 
-  transition: background 0.3s; 
+  transition: background 0.3s, transform 0.2s; 
   font-size: 1rem;
   margin-top: 8px;
+  font-weight:bold;
 }
 
 button:hover { 
-  background:#0066cc; 
+  background:#ffeb3b; 
+  transform: translateY(-2px);
+}
+
+/* Disabled button style */
+button:disabled {
+  background:#bdbdbd;
+  color:#424242;
+  cursor:not-allowed;
 }
 
 /* ---------------- Table ---------------- */
@@ -94,16 +188,20 @@ table {
   width:100%; 
   border-collapse:collapse; 
   margin-top:10px; 
+  background:rgba(0,0,0,0.4);
+  color:#fff;
+  border-radius:10px;
+  overflow:hidden;
 }
 
 th, td { 
-  border:1px solid #ccc; 
+  border:1px solid rgba(255,255,255,0.15); 
   padding:8px; 
   text-align:left; 
 }
 
 th { 
-  background:#004080; 
+  background:#b71c1c; 
   color:white; 
 }
 
@@ -116,6 +214,7 @@ th {
 /* ---------------- Sections ---------------- */
 section { 
   padding:20px; 
+  color:#f5f5f5;
 }
 
 ul { 
@@ -123,24 +222,50 @@ ul {
   padding-left: 20px; 
 }
 
+/* Christmas bullets */
+section#rules ul li::marker,
+section#notice ul li::marker {
+  color:#ffeb3b;
+}
+
 /* ---------------- Responsive Design ---------------- */
 @media screen and (max-width: 1024px) {
-  header { flex-direction: column; align-items: flex-start; }
-  nav a { margin: 5px 0; }
+  header { 
+    flex-wrap:nowrap; 
+  }
+
+  .hamburger {
+    display:block;
+  }
+
+  nav {
+    flex-direction: column;
+    position:absolute;
+    top:60px;
+    right:10px;
+    background:rgba(0,0,0,0.9);
+    padding:10px;
+    border-radius:10px;
+    display:none;
+    box-shadow:0 4px 10px rgba(0,0,0,0.8);
+  }
+
+  nav.show {
+    display:flex;
+  }
 }
 
 @media screen and (max-width: 768px) {
-  h1 { font-size: 1.5rem; }
+  .logo-title h1 { font-size: 1.4rem; }
   h2 { font-size: 1.3rem; }
   button { padding:6px 10px; font-size:0.95rem; }
 }
 
 @media screen and (max-width: 480px) {
-  h1 { font-size: 1.3rem; }
+  .logo-title h1 { font-size: 1.1rem; }
   h2 { font-size: 1.1rem; }
   button { padding:5px 8px; font-size:0.9rem; }
   .book-grid { grid-template-columns: repeat(auto-fill,minmax(120px,1fr)); gap:10px; padding:10px; }
-  header h1 { margin-bottom: 10px; }
 }
 
 /* ---------------- Extra Styles for Friendly Look ---------------- */
@@ -152,4 +277,30 @@ section#notice ul li {
 
 section#contact p {
   margin:5px 0;
+}
+
+/* Simple falling snow effect using pseudo elements */
+body {
+  background-color:#000;
+}
+
+body::before,
+body::after {
+  pointer-events:none;
+}
+
+body::after {
+  background-image:
+    radial-gradient(2px 2px at 20% 20%, #ffffffaa 50%, transparent 51%),
+    radial-gradient(2px 2px at 80% 30%, #ffffffaa 50%, transparent 51%),
+    radial-gradient(2px 2px at 40% 80%, #ffffffaa 50%, transparent 51%),
+    radial-gradient(3px 3px at 60% 10%, #ffffffaa 50%, transparent 51%),
+    radial-gradient(3px 3px at 10% 60%, #ffffffaa 50%, transparent 51%);
+  background-size: 300px 300px;
+  animation: snowFall 20s linear infinite;
+}
+
+@keyframes snowFall {
+  0% { transform: translateY(-50px); }
+  100% { transform: translateY(50px); }
 }
