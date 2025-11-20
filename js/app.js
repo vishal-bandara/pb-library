@@ -66,7 +66,12 @@ const bookList = document.getElementById("book-list");
 async function renderBooks() {
   if (!bookList) return;
 
-  bookList.innerHTML = "";
+  bookList.innerHTML = `
+  <div class="book-card">
+    <img src="images/book1.jpg" onerror="this.src='https://via.placeholder.com/200x260?text=No+Image'">
+    <h3>Book 1</h3>
+  </div>
+`;
 
   // Fetch all reservations first
   const reservedSnapshot = await db.collection("reservations").get();
