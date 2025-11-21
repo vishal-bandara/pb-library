@@ -108,13 +108,8 @@
         <!-- Notices -->
         <div class="notice-card">
           <h3 class="sub-heading">Notices</h3>
-          <ul>
-            <li>
-              DECLARATION – I, being a registered member, agree to abide by the rules and regulations of PEOPLES BANK LIBRARY
-              and accept responsibility for all materials issued on my membership.
-            </li>
-            <li>Library closes at 5:00 PM on weekdays and remains closed on public holidays.</li>
-            <li>New arrivals are updated monthly. Please check this page regularly for updates.</li>
+          <ul id="notice-list">
+            <!-- Will be filled from Firestore -->
           </ul>
         </div>
 
@@ -133,10 +128,10 @@
 
           <div class="admin-card" id="admin-card">
             <h3 class="sub-heading">Admin</h3>
-            <p class="admin-text">Login to review and manage reservations and book names.</p>
+            <p class="admin-text">Login to review and manage reservations, book names & photos, and notices.</p>
             <button onclick="adminLogin()">Admin Login</button>
 
-            <!-- Admin panel: Reservations + Manage Books -->
+            <!-- Admin panel: Reservations + Manage Books + Manage Notices -->
             <div id="admin-panel" style="margin-top:12px; display:none;">
               <h4 class="admin-sub">Reservations</h4>
               <div id="reservation-wrapper">
@@ -144,9 +139,20 @@
               </div>
 
               <h4 class="admin-sub" style="margin-top:16px;">Manage Books</h4>
-              <p class="admin-text">Edit book names here. Changes will show for all users.</p>
+              <p class="admin-text">Edit book names and photos here. Changes will show for all users.</p>
               <div id="book-admin-wrapper">
                 <table id="book-admin-table" class="res-table" aria-live="polite"></table>
+              </div>
+
+              <!-- Manage Notices -->
+              <div style="margin-top:16px;">
+                <h4 class="admin-sub">Manage Notices</h4>
+                <p class="admin-text">Add a new notice to the notice panel.</p>
+
+                <textarea id="notice-input" rows="3" placeholder="Type notice here..." style="width:100%;"></textarea>
+                <button style="margin-top:8px;" onclick="addNotice()">Add Notice</button>
+
+                <table id="notice-admin-table" class="res-table" style="margin-top:12px;" aria-live="polite"></table>
               </div>
             </div>
           </div>
