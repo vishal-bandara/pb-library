@@ -47,14 +47,14 @@ try {
 const db = firebase.firestore();
 
 /* =========================
-   Books data (IDs + images)
+   Books data (IDs + default images)
    ========================= */
 const books = [];
 for (let i = 1; i <= 20; i++) {
   books.push({
     id: i,
-    title: `Book ${i}`, // default: will be overridden by Firestore if present
-    image: `images/book${i}.jpg`,
+    title: `Book ${i}`, // default title, will be overridden by Firestore if present
+    image: `images/book${i}.jpg`, // default local image
   });
 }
 
@@ -68,26 +68,31 @@ function escapeHtml(str) {
 }
 
 /* =========================
-   Load book titles from Firestore
+   Load book data (title + image) from Firestore
+   Collection: "books"
+   Doc ID: "1", "2", ... "20"
+   Fields: title (string), imageUrl (string)
    ========================= */
-async function loadBookTitles() {
+async function loadBooksFromFirestore() {
   try {
     const snapshot = await db.collection("books").get();
-    if (snapshot.empty) {
-      // no custom titles
-      return;
-    }
+    if (snapshot.empty) return;
 
     snapshot.forEach((doc) => {
       const data = doc.data();
       const bookId = Number(doc.id);
       const book = books.find((b) => b.id === bookId);
-      if (book && data && data.title) {
+      if (!book || !data) return;
+
+      if (data.title) {
         book.title = data.title;
+      }
+      if (data.imageUrl) {
+        book.image = data.imageUrl;
       }
     });
   } catch (err) {
-    console.error("Error loading book titles:", err);
+    console.error("Error loading books:", err);
   }
 }
 
@@ -99,8 +104,8 @@ const bookList = document.getElementById("book-list");
 async function renderBooks() {
   if (!bookList) return;
 
-  // Load titles from Firestore first
-  await loadBookTitles();
+  // Load titles and images from Firestore
+  await loadBooksFromFirestore();
 
   // Clear old content
   bookList.innerHTML = "";
@@ -179,6 +184,7 @@ function adminLogin() {
     if (panel) panel.style.display = "block";
     showReservations();
     showBookAdminList();
+    showNoticeAdminList();
 
     document.getElementById("admin-card")?.scrollIntoView({ behavior: "smooth" });
   } else {
@@ -235,7 +241,7 @@ async function showReservations() {
       <td>${escapeHtml(data.phone || "")}</td>
       <td>${escapeHtml(dateText)}</td>
       <td class="res-actions">
-        <button class="edit" data-doc="${doc.id}" data-book="${data.bookId}">Edit</button>
+        <button class="edit" data-doc="${doc.id}" data-book="${data.bookId}">Edit Name</button>
         <button class="reset" data-doc="${doc.id}" data-book="${data.bookId}">Reset</button>
       </td>
     `;
@@ -253,7 +259,8 @@ async function showReservations() {
 }
 
 /* =========================
-   Edit book title (from reservation row) - updates reservation & books collection
+   Edit book title (from reservation row)
+   - updates reservation + books collection + cards
    ========================= */
 async function editBookTitle(docId, bookId) {
   try {
@@ -323,15 +330,15 @@ async function showBookAdminList() {
   const table = document.getElementById("book-admin-table");
   if (!table) return;
 
-  // Ensure book titles are loaded from Firestore
-  await loadBookTitles();
+  // Ensure book titles & images are loaded from Firestore
+  await loadBooksFromFirestore();
 
   table.innerHTML = `
     <thead>
       <tr>
         <th style="min-width:60px">ID</th>
         <th style="min-width:160px">Book Name</th>
-        <th style="min-width:80px">Action</th>
+        <th style="min-width:100px">Action</th>
       </tr>
     </thead>
     <tbody id="book-admin-body"></tbody>
@@ -351,7 +358,8 @@ async function showBookAdminList() {
       <td>${book.id}</td>
       <td>${escapeHtml(book.title)}</td>
       <td class="res-actions">
-        <button class="edit-book" data-book="${book.id}">Edit</button>
+        <button class="edit-book" data-book="${book.id}">Edit Name</button>
+        <button class="edit-image" data-book="${book.id}">Change Photo</button>
       </td>
     `;
     body.appendChild(tr);
@@ -359,6 +367,10 @@ async function showBookAdminList() {
 
   body.querySelectorAll("button.edit-book").forEach((btn) => {
     btn.addEventListener("click", () => adminEditBookName(Number(btn.dataset.book)));
+  });
+
+  body.querySelectorAll("button.edit-image").forEach((btn) => {
+    btn.addEventListener("click", () => adminEditBookImage(Number(btn.dataset.book)));
   });
 }
 
@@ -386,7 +398,6 @@ async function adminEditBookName(bookId) {
     // 3) Update all reservations with this bookId
     const resSnap = await db.collection("reservations").where("bookId", "==", bookId).get();
     if (!resSnap.empty) {
-      // Use a batch for multiple updates
       const batch = db.batch();
       resSnap.forEach((doc) => {
         batch.update(doc.ref, { title: cleaned });
@@ -413,11 +424,178 @@ async function adminEditBookName(bookId) {
 }
 
 /* =========================
+   Admin: Edit book image (URL)
+   ========================= */
+async function adminEditBookImage(bookId) {
+  try {
+    const book = books.find((b) => b.id === bookId);
+    const currentImage = book ? book.image : "";
+
+    const newUrl = prompt(
+      "Enter image URL for this book.\n(Use a direct link from GitHub raw, Firebase Storage, or any image hosting):",
+      currentImage
+    );
+
+    if (!newUrl || !newUrl.trim()) return;
+    const cleaned = newUrl.trim();
+
+    // 1) Update `books` collection with new imageUrl
+    const bookDocRef = db.collection("books").doc(String(bookId));
+    await bookDocRef.set({ imageUrl: cleaned }, { merge: true });
+
+    // 2) Update local array
+    if (book) book.image = cleaned;
+
+    // 3) Update UI card in New Arrivals
+    const card = document.querySelector(`#book-list .book-card[data-id="${bookId}"]`);
+    if (card) {
+      const imgEl = card.querySelector("img");
+      if (imgEl) imgEl.src = cleaned;
+    }
+
+    // 4) Refresh admin book list (optional)
+    await showBookAdminList();
+
+    alert("Book image updated successfully!");
+  } catch (err) {
+    console.error("adminEditBookImage error", err);
+    alert("Failed to update book image. See console for details.");
+  }
+}
+
+/* =========================
+   Notices: Load for public view
+   Collection: "notices"
+   Fields: text (string), createdAt (Timestamp/Date)
+   ========================= */
+async function loadNotices() {
+  const list = document.getElementById("notice-list");
+  if (!list) return;
+
+  list.innerHTML = ""; // clear existing items
+
+  try {
+    const snapshot = await db.collection("notices").orderBy("createdAt", "desc").get();
+    if (snapshot.empty) {
+      list.innerHTML = "<li>No notices yet</li>";
+      return;
+    }
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      const li = document.createElement("li");
+      li.textContent = data.text || "";
+      list.appendChild(li);
+    });
+  } catch (err) {
+    console.error("Error loading notices:", err);
+    list.innerHTML = "<li>Failed to load notices</li>";
+  }
+}
+
+/* =========================
+   Admin: Add notice
+   ========================= */
+async function addNotice() {
+  const textarea = document.getElementById("notice-input");
+  if (!textarea) return;
+
+  const text = textarea.value.trim();
+  if (!text) {
+    alert("Please enter a notice.");
+    return;
+  }
+
+  try {
+    await db.collection("notices").add({
+      text,
+      createdAt: new Date(),
+    });
+
+    textarea.value = "";
+    await loadNotices();
+    await showNoticeAdminList();
+
+    alert("Notice added successfully!");
+  } catch (err) {
+    console.error("addNotice error", err);
+    alert("Failed to add notice. See console.");
+  }
+}
+
+/* =========================
+   Admin: Show notices list (for delete)
+   ========================= */
+async function showNoticeAdminList() {
+  const table = document.getElementById("notice-admin-table");
+  if (!table) return;
+
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th style="min-width:80px">ID</th>
+        <th>Notice</th>
+        <th style="min-width:80px">Action</th>
+      </tr>
+    </thead>
+    <tbody id="notice-admin-body"></tbody>
+  `;
+
+  const body = document.getElementById("notice-admin-body");
+  if (!body) return;
+
+  try {
+    const snapshot = await db.collection("notices").orderBy("createdAt", "desc").get();
+    if (snapshot.empty) {
+      body.innerHTML = `<tr><td colspan="3" class="empty">No notices</td></tr>`;
+      return;
+    }
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${doc.id}</td>
+        <td>${escapeHtml(data.text || "")}</td>
+        <td class="res-actions">
+          <button class="delete-notice" data-id="${doc.id}">Delete</button>
+        </td>
+      `;
+      body.appendChild(tr);
+    });
+
+    body.querySelectorAll("button.delete-notice").forEach((btn) => {
+      btn.addEventListener("click", () => deleteNotice(btn.dataset.id));
+    });
+  } catch (err) {
+    console.error("showNoticeAdminList error", err);
+  }
+}
+
+/* =========================
+   Admin: Delete notice
+   ========================= */
+async function deleteNotice(noticeId) {
+  if (!confirm("Delete this notice?")) return;
+
+  try {
+    await db.collection("notices").doc(noticeId).delete();
+    await loadNotices();
+    await showNoticeAdminList();
+    alert("Notice deleted.");
+  } catch (err) {
+    console.error("deleteNotice error", err);
+    alert("Failed to delete notice. See console.");
+  }
+}
+
+/* =========================
    Init
    ========================= */
 (async function init() {
   try {
     await renderBooks();
+    await loadNotices();
   } catch (e) {
     console.error("init error", e);
   }
