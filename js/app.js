@@ -47,13 +47,13 @@ try {
 const db = firebase.firestore();
 
 /* =========================
-   Books data
+   Books data (IDs + images)
    ========================= */
 const books = [];
 for (let i = 1; i <= 20; i++) {
   books.push({
     id: i,
-    title: `Book ${i}`,
+    title: `Book ${i}`, // default: will be overridden by Firestore if present
     image: `images/book${i}.jpg`,
   });
 }
@@ -68,12 +68,39 @@ function escapeHtml(str) {
 }
 
 /* =========================
+   Load book titles from Firestore
+   ========================= */
+async function loadBookTitles() {
+  try {
+    const snapshot = await db.collection("books").get();
+    if (snapshot.empty) {
+      // no custom titles
+      return;
+    }
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      const bookId = Number(doc.id);
+      const book = books.find((b) => b.id === bookId);
+      if (book && data && data.title) {
+        book.title = data.title;
+      }
+    });
+  } catch (err) {
+    console.error("Error loading book titles:", err);
+  }
+}
+
+/* =========================
    Render books
    ========================= */
 const bookList = document.getElementById("book-list");
 
 async function renderBooks() {
   if (!bookList) return;
+
+  // Load titles from Firestore first
+  await loadBookTitles();
 
   // Clear old content
   bookList.innerHTML = "";
@@ -151,6 +178,7 @@ function adminLogin() {
     const panel = document.getElementById("admin-panel");
     if (panel) panel.style.display = "block";
     showReservations();
+    showBookAdminList();
 
     document.getElementById("admin-card")?.scrollIntoView({ behavior: "smooth" });
   } else {
@@ -225,7 +253,7 @@ async function showReservations() {
 }
 
 /* =========================
-   Edit book title
+   Edit book title (from reservation row) - updates reservation & books collection
    ========================= */
 async function editBookTitle(docId, bookId) {
   try {
@@ -239,14 +267,23 @@ async function editBookTitle(docId, bookId) {
     if (!newTitle || !newTitle.trim()) return;
 
     const cleaned = newTitle.trim();
+
+    // 1) Update reservation document
     await docRef.update({ title: cleaned });
 
+    // 2) Update master book title in `books` collection
+    const bookDocRef = db.collection("books").doc(String(bookId));
+    await bookDocRef.set({ title: cleaned }, { merge: true });
+
+    // 3) Update local books array
     const book = books.find((b) => b.id === bookId);
     if (book) book.title = cleaned;
 
+    // 4) Update UI card title
     const card = document.querySelector(`#book-list .book-card[data-id="${bookId}"]`);
     if (card) card.querySelector("h3").textContent = cleaned;
 
+    // 5) Refresh reservations table to show new name
     await showReservations();
     alert("Book name updated successfully!");
   } catch (err) {
@@ -276,6 +313,102 @@ async function resetReservation(docId, bookId) {
   } catch (err) {
     console.error("resetReservation error", err);
     alert("Failed to reset. See console.");
+  }
+}
+
+/* =========================
+   Admin: Show book list (Manage Books)
+   ========================= */
+async function showBookAdminList() {
+  const table = document.getElementById("book-admin-table");
+  if (!table) return;
+
+  // Ensure book titles are loaded from Firestore
+  await loadBookTitles();
+
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th style="min-width:60px">ID</th>
+        <th style="min-width:160px">Book Name</th>
+        <th style="min-width:80px">Action</th>
+      </tr>
+    </thead>
+    <tbody id="book-admin-body"></tbody>
+  `;
+
+  const body = document.getElementById("book-admin-body");
+  if (!body) return;
+
+  if (!books.length) {
+    body.innerHTML = `<tr><td colspan="3" class="empty">No books defined</td></tr>`;
+    return;
+  }
+
+  books.forEach((book) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${book.id}</td>
+      <td>${escapeHtml(book.title)}</td>
+      <td class="res-actions">
+        <button class="edit-book" data-book="${book.id}">Edit</button>
+      </td>
+    `;
+    body.appendChild(tr);
+  });
+
+  body.querySelectorAll("button.edit-book").forEach((btn) => {
+    btn.addEventListener("click", () => adminEditBookName(Number(btn.dataset.book)));
+  });
+}
+
+/* =========================
+   Admin: Edit book name from list
+   ========================= */
+async function adminEditBookName(bookId) {
+  try {
+    // Get current book
+    const book = books.find((b) => b.id === bookId);
+    const currentTitle = book ? book.title : `Book ${bookId}`;
+
+    const newTitle = prompt("Enter new book name:", currentTitle);
+    if (!newTitle || !newTitle.trim()) return;
+
+    const cleaned = newTitle.trim();
+
+    // 1) Update `books` collection (master titles)
+    const bookDocRef = db.collection("books").doc(String(bookId));
+    await bookDocRef.set({ title: cleaned }, { merge: true });
+
+    // 2) Update local array
+    if (book) book.title = cleaned;
+
+    // 3) Update all reservations with this bookId
+    const resSnap = await db.collection("reservations").where("bookId", "==", bookId).get();
+    if (!resSnap.empty) {
+      // Use a batch for multiple updates
+      const batch = db.batch();
+      resSnap.forEach((doc) => {
+        batch.update(doc.ref, { title: cleaned });
+      });
+      await batch.commit();
+    }
+
+    // 4) Update UI cards (New Arrivals section)
+    const card = document.querySelector(`#book-list .book-card[data-id="${bookId}"]`);
+    if (card) {
+      const titleEl = card.querySelector("h3");
+      if (titleEl) titleEl.textContent = cleaned;
+    }
+
+    // 5) Refresh admin book list & reservations table
+    await showBookAdminList();
+    await showReservations();
+
+    alert("Book name updated successfully!");
+  } catch (err) {
+    console.error("adminEditBookName error", err);
+    alert("Failed to update book name. See console for details.");
   }
 }
 
