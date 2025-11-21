@@ -361,6 +361,23 @@ footer{
   font-size:0.85rem;
   margin-top:16px;
 }
+/* =========================
+   Fix mobile zoom issues
+   ========================= */
+@media (max-width: 480px){
+  .container{
+    padding: 0 8px;
+  }
+  .book-grid{
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 380px){
+  .book-grid{
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+}
 
 /* =========================
    Responsive
