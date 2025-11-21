@@ -14,7 +14,7 @@
 </head>
 <body>
 
-  <!-- Snow + Christmas tree -->
+  <!-- Christmas tree -->
   <svg class="christmas-tree" viewBox="0 0 120 180" aria-hidden="true">
     <defs>
       <linearGradient id="g" x1="0" x2="1">
@@ -26,6 +26,8 @@
       <polygon points="60,6 90,54 66,54 100,104 74,104 106,154 60,110 14,154 46,104 20,104 54,54 30,54" />
     </g>
   </svg>
+
+  <!-- Snow overlay -->
   <div class="snow" aria-hidden="true"></div>
 
   <!-- Header -->
@@ -61,25 +63,41 @@
           <div class="acc-head" onclick="toggleAcc(this)">
             <h4>Membership Procedure</h4><span>▾</span>
           </div>
-          <div class="acc-body">Application forms should be duly completed and signed...</div>
+          <div class="acc-body">
+            Application forms should be duly completed and signed by the prospective member and the Head of Department / Branch Manager
+            before handing over to the library. If the recommendation is refused, a valid reason should be given. No person will be admitted
+            as a member unless she/he is introduced and the declaration signed by the Head of Department / Branch Manager.
+          </div>
         </div>
+
         <div class="acc-item">
           <div class="acc-head" onclick="toggleAcc(this)">
             <h4>Library Tickets & Lending</h4><span>▾</span>
           </div>
-          <div class="acc-body">Members will be issued two Borrowers Cards...</div>
+          <div class="acc-body">
+            Members will be issued two Borrowers Cards. These cards are not transferable and must be presented when borrowing books.
+            The normal loan period for books is 2 weeks. Books must be returned on or before the due date.
+          </div>
         </div>
+
         <div class="acc-item">
           <div class="acc-head" onclick="toggleAcc(this)">
             <h4>Overdue & Loss</h4><span>▾</span>
           </div>
-          <div class="acc-body">A fine of Rs.10 per day up to 14 days is charged...</div>
+          <div class="acc-body">
+            A fine of Rs.10 per day up to 14 days is charged for overdue books. If the book is not returned thereafter, the cost of the
+            book plus an additional processing fee will be charged. Loss of a book should be reported immediately to the librarian.
+          </div>
         </div>
+
         <div class="acc-item">
           <div class="acc-head" onclick="toggleAcc(this)">
             <h4>Care of Materials</h4><span>▾</span>
           </div>
-          <div class="acc-body">Members must handle books carefully...</div>
+          <div class="acc-body">
+            Members must handle books and other materials with care. Writing or marking on library materials is strictly prohibited.
+            Any damage noticed should be reported to the library staff at once.
+          </div>
         </div>
       </div>
     </section>
@@ -87,31 +105,48 @@
     <!-- Notice / Contact / Admin -->
     <section class="section" id="notice-contact" aria-label="Notice and contact">
       <div class="info-grid">
+        <!-- Notices -->
         <div class="notice-card">
           <h3 class="sub-heading">Notices</h3>
           <ul>
-            <li>DECLARATION – I being a registered member...</li>
-            <li>Library closes at 5 PM.</li>
-            <li>New arrivals updated monthly.</li>
+            <li>
+              DECLARATION – I, being a registered member, agree to abide by the rules and regulations of PEOPLES BANK LIBRARY
+              and accept responsibility for all materials issued on my membership.
+            </li>
+            <li>Library closes at 5:00 PM on weekdays and remains closed on public holidays.</li>
+            <li>New arrivals are updated monthly. Please check this page regularly for updates.</li>
           </ul>
         </div>
 
+        <!-- Contact + Admin -->
         <div>
           <div class="contact-card" id="contact">
             <h3 class="sub-heading">Contact</h3>
             <p>Developer: <strong>Vishal Bandara</strong></p>
-            <p><a href="https://vishal-bandara.github.io/vishalbandara/" target="_blank">About Developer</a></p>
+            <p>
+              <a href="https://vishal-bandara.github.io/vishalbandara/" target="_blank" rel="noopener">
+                About Developer
+              </a>
+            </p>
             <p>Library Manager: <strong>Menaka Hadunpathirana</strong></p>
           </div>
 
           <div class="admin-card" id="admin-card">
             <h3 class="sub-heading">Admin</h3>
-            <p class="admin-text">Login to review and manage reservations.</p>
+            <p class="admin-text">Login to review and manage reservations and book names.</p>
             <button onclick="adminLogin()">Admin Login</button>
+
+            <!-- Admin panel: Reservations + Manage Books -->
             <div id="admin-panel" style="margin-top:12px; display:none;">
               <h4 class="admin-sub">Reservations</h4>
               <div id="reservation-wrapper">
                 <table id="reservation-table" class="res-table" aria-live="polite"></table>
+              </div>
+
+              <h4 class="admin-sub" style="margin-top:16px;">Manage Books</h4>
+              <p class="admin-text">Edit book names here. Changes will show for all users.</p>
+              <div id="book-admin-wrapper">
+                <table id="book-admin-table" class="res-table" aria-live="polite"></table>
               </div>
             </div>
           </div>
@@ -119,7 +154,10 @@
       </div>
     </section>
 
-    <footer>© PEOPLES BANK LIBRARY · <span id="year"></span></footer>
+    <!-- Footer -->
+    <footer>
+      © PEOPLES BANK LIBRARY · <span id="year"></span>
+    </footer>
   </main>
 
   <!-- JS -->
