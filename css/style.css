@@ -141,6 +141,16 @@ header{
   color:#fffde7;
 }
 
+/* New: Hide the Christmas message by default */
+.mobile-christmas {
+  display: none; 
+  font-weight: 700;
+  color: var(--yellow); 
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-shadow: 0 0 5px rgba(255, 235, 59, 0.5);
+}
+
 /* Desktop nav (normal) */
 nav {
   display: flex;
@@ -238,6 +248,22 @@ nav a:hover {
     background: rgb(250, 137, 0);
     transform: translateX(-4px);
   }
+}
+
+/* =========================
+   Responsive: Mobile Portrait Swap (New Fix)
+   ========================= */
+@media (max-width: 480px) and (orientation: portrait) {
+    /* 1. Hide the original tagline text (e.g., "Making Learning a Joy.") */
+    .desktop-tagline {
+        display: none !important;
+    }
+
+    /* 2. Show the Christmas text (e.g., "MERRY CHRISTMAS! 🎄") */
+    .mobile-christmas {
+        display: block !important;
+        margin-top: 2px;
+    }
 }
 
 
@@ -477,7 +503,17 @@ footer{
 
 @media (max-width: 420px){
   .book-card img{ height:130px; }
-  .logo-title p{ display:none; }
+  /* Logo title fix for extra narrow screens */
+  .logo-title h1 { font-size: 1rem; }
+  .logo-title p { 
+    /* Hide the parent p element to prevent extra space if the span swap fails */
+    display: block; 
+  }
+  .desktop-tagline {
+    /* Ensure desktop tagline is hidden if the parent p is visible */
+    display: none; 
+  }
+  /* The mobile-christmas element is handled by the portrait query below */
   .book-card h3{ font-size:0.9rem; }
   .res-table th,
   .res-table td{ font-size:0.82rem; }
