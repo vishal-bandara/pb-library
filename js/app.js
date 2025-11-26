@@ -18,25 +18,88 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =========================
-   Menu + accordion handlers
+   Menu + Accordion Handlers
    ========================= */
+
+// Toggle mobile menu
 function toggleMenu() {
   const nav = document.getElementById("main-nav");
-  if (!nav) return;
-  nav.style.display = nav.style.display === "flex" ? "none" : "flex";
+  const hamburger = document.querySelector(".hamburger");
+
+  if (!nav || !hamburger) return;
+
+  // Toggle visibility
+  nav.classList.toggle("open");
+
+  // Update accessibility
+  const isOpen = nav.classList.contains("open");
+  hamburger.setAttribute("aria-expanded", isOpen);
 }
 
+/* =========================
+   Optional: Close menu when clicking outside
+   ========================= */
+
+document.addEventListener("click", (event) => {
+  const nav = document.getElementById("main-nav");
+  const hamburger = document.querySelector(".hamburger");
+
+  if (!nav || !hamburger) return;
+
+  // If menu is open and user clicks outside of it
+  if (
+    nav.classList.contains("open") &&
+    !nav.contains(event.target) &&
+    !hamburger.contains(event.target)
+  ) {
+    nav.classList.remove("open");
+    hamburger.setAttribute("aria-expanded", false);
+  }
+});
+
+/* =========================
+   Optional: Close menu on Escape key
+   ========================= */
+
+document.addEventListener("keyup", (event) => {
+  if (event.key === "Escape") {
+    const nav = document.getElementById("main-nav");
+    const hamburger = document.querySelector(".hamburger");
+
+    if (!nav || !hamburger) return;
+
+    nav.classList.remove("open");
+    hamburger.setAttribute("aria-expanded", false);
+  }
+});
+
+
+// Toggle accordion sections
 function toggleAcc(head) {
   const body = head.nextElementSibling;
   if (!body) return;
+
+  // Check if this body is already visible
   const visible = body.style.display === "block";
 
+  // Close all other accordion bodies
   document.querySelectorAll(".acc-body").forEach((b) => {
     if (b !== body) b.style.display = "none";
   });
 
+  // Toggle this one
   body.style.display = visible ? "none" : "block";
 }
+
+// Optional: close mobile menu when a nav link is clicked
+document.addEventListener("click", (e) => {
+  const nav = document.getElementById("main-nav");
+  if (!nav) return;
+
+  if (e.target.closest("#main-nav a")) {
+    nav.classList.remove("open");
+  }
+});
 
 /* =========================
    Firebase config (compat)
