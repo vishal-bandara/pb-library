@@ -10,15 +10,7 @@ if ('serviceWorker' in navigator) {
 }
 
 /* =========================
-   Year in footer
-   ========================= */
-document.addEventListener("DOMContentLoaded", () => {
-  const yearSpan = document.getElementById("year");
-  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
-});
-
-/* =========================
-   Menu + Accordion Handlers
+   Menu Toggle Function (called via onclick in HTML)
    ========================= */
 
 // Toggle mobile menu
@@ -37,69 +29,84 @@ function toggleMenu() {
 }
 
 /* =========================
-   Optional: Close menu when clicking outside
+   Accordion Toggle Function (called via onclick in HTML)
    ========================= */
-
-document.addEventListener("click", (event) => {
-  const nav = document.getElementById("main-nav");
-  const hamburger = document.querySelector(".hamburger");
-
-  if (!nav || !hamburger) return;
-
-  // If menu is open and user clicks outside of it
-  if (
-    nav.classList.contains("open") &&
-    !nav.contains(event.target) &&
-    !hamburger.contains(event.target)
-  ) {
-    nav.classList.remove("open");
-    hamburger.setAttribute("aria-expanded", false);
-  }
-});
-
-/* =========================
-   Optional: Close menu on Escape key
-   ========================= */
-
-document.addEventListener("keyup", (event) => {
-  if (event.key === "Escape") {
-    const nav = document.getElementById("main-nav");
-    const hamburger = document.querySelector(".hamburger");
-
-    if (!nav || !hamburger) return;
-
-    nav.classList.remove("open");
-    hamburger.setAttribute("aria-expanded", false);
-  }
-});
-
 
 // Toggle accordion sections
 function toggleAcc(head) {
-  const body = head.nextElementSibling;
-  if (!body) return;
+  // Find the parent acc-item
+  const accItem = head.closest('.acc-item');
+  if (!accItem) return;
 
-  // Check if this body is already visible
-  const visible = body.style.display === "block";
-
-  // Close all other accordion bodies
-  document.querySelectorAll(".acc-body").forEach((b) => {
-    if (b !== body) b.style.display = "none";
+  // Close all other open items in the same accordion group
+  document.querySelectorAll(".accordion .acc-item.open").forEach((item) => {
+    if (item !== accItem) {
+      item.classList.remove("open");
+    }
   });
 
-  // Toggle this one
-  body.style.display = visible ? "none" : "block";
+  // Toggle the 'open' class on the clicked item's parent
+  accItem.classList.toggle("open");
 }
 
-// Optional: close mobile menu when a nav link is clicked
-document.addEventListener("click", (e) => {
-  const nav = document.getElementById("main-nav");
-  if (!nav) return;
+/* =========================
+   DOM Ready Initialization (CONSOLIDATED)
+   ========================= */
 
-  if (e.target.closest("#main-nav a")) {
-    nav.classList.remove("open");
+document.addEventListener("DOMContentLoaded", () => {
+  
+  // --- 1. Footer Year ---
+  const yearSpan = document.getElementById("year");
+  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+  // --- 2. Menu Handlers: Click-Outside-to-Close ---
+  const hamburger = document.querySelector(".hamburger");
+  const nav = document.getElementById("main-nav");
+  
+  // Safety check for menu elements
+  if (hamburger && nav) {
+    
+    // Add an event listener to the whole document to handle clicks outside the menu
+    document.addEventListener("click", (event) => {
+      // Check if the menu is open, AND the click was NOT on the nav, AND NOT on the hamburger
+      const isMenuOpen = nav.classList.contains("open");
+      const isClickInsideNav = nav.contains(event.target);
+      const isClickOnHamburger = hamburger.contains(event.target);
+
+      if (
+        isMenuOpen &&
+        !isClickInsideNav &&
+        !isClickOnHamburger
+      ) {
+        // Close the menu
+        nav.classList.remove("open");
+        hamburger.setAttribute("aria-expanded", false);
+      }
+    });
+
+    // Optional: close mobile menu when a nav link is clicked
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("#main-nav a")) {
+        nav.classList.remove("open");
+        hamburger.setAttribute("aria-expanded", false);
+      }
+    });
+
+  } else {
+    console.warn("Missing menu or hamburger button. Menu handlers disabled.");
   }
+
+  // --- 3. Initial Data Load ---
+  (async function init() {
+    try {
+      await renderBooks();
+      await loadNotices();
+    } catch (e) {
+      console.error("init error", e);
+    }
+  })();
 });
+
 
 /* =========================
    Firebase config (compat)
@@ -200,7 +207,7 @@ async function renderBooks() {
 
     card.innerHTML = `
       <img src="${book.image}" alt="${escapeHtml(book.title)}"
-           onerror="this.src='https://via.placeholder.com/200x260?text=No+Image'">
+             onerror="this.src='https://via.placeholder.com/200x260?text=No+Image'">
       <h3>${escapeHtml(book.title)}</h3>
       <button>${reservedMap[book.id] ? "Already Reserved" : "Reserve"}</button>
     `;
@@ -662,15 +669,3 @@ async function deleteNotice(noticeId) {
     alert("Failed to delete notice. See console.");
   }
 }
-
-/* =========================
-   Init
-   ========================= */
-(async function init() {
-  try {
-    await renderBooks();
-    await loadNotices();
-  } catch (e) {
-    console.error("init error", e);
-  }
-})();
