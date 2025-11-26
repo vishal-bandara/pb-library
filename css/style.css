@@ -53,30 +53,58 @@ body::after{
 }
 
 /* snow */
-/* snow */
-.snow {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;           /* or lower if it covers your UI; just keep > background */
-  pointer-events: none;
-  background-image:
-    radial-gradient(2px 2px at 10% 10%, rgba(255,255,255,0.8) 50%, transparent 51%),
-    radial-gradient(2px 2px at 30% 40%, rgba(255,255,255,0.8) 50%, transparent 51%),
-    radial-gradient(2px 2px at 70% 20%, rgba(255,255,255,0.8) 50%, transparent 51%),
-    radial-gradient(2px 2px at 80% 75%, rgba(255,255,255,0.8) 50%, transparent 51%);
-  background-size: 300px 300px;
-  background-repeat: repeat;
-  animation: snowFall 12s linear infinite;
+body {
+  margin: 0;
+  background: #000;   /* black background */
 }
 
-@keyframes snowFall {
+/* FULLSCREEN SNOW CONTAINER */
+.snow {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+/* BASE STYLE FOR EACH FLAKE */
+.snowflake {
+  position: absolute;
+  top: -10%;
+  color: #ffffff;
+  font-size: 1.5rem;
+  user-select: none;
+  opacity: 0.9;
+  animation-name: snow-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* FALL + SWAY COMBINED IN ONE ANIMATION */
+@keyframes snow-fall {
   0% {
-    background-position: 0 -300px;   /* start above */
+    transform: translate3d(0, -100%, 0);
+  }
+  50% {
+    transform: translate3d(20px, 50vh, 0);
   }
   100% {
-    background-position: 0 300px;    /* move below */
+    transform: translate3d(-10px, 110vh, 0);
   }
 }
+
+/* DIFFERENT POSITIONS / SPEEDS / SIZES */
+.snowflake:nth-child(1)  { left: 5%;  animation-duration: 10s; animation-delay: 0s;   font-size: 1.2rem; }
+.snowflake:nth-child(2)  { left: 15%; animation-duration: 12s; animation-delay: 2s;   font-size: 1.4rem; }
+.snowflake:nth-child(3)  { left: 25%; animation-duration: 9s;  animation-delay: 1s;   font-size: 1rem; }
+.snowflake:nth-child(4)  { left: 35%; animation-duration: 13s; animation-delay: 3s;   font-size: 1.8rem; }
+.snowflake:nth-child(5)  { left: 45%; animation-duration: 11s; animation-delay: 1.5s; font-size: 1.3rem; }
+.snowflake:nth-child(6)  { left: 55%; animation-duration: 14s; animation-delay: 2.5s; font-size: 1.9rem; }
+.snowflake:nth-child(7)  { left: 65%; animation-duration: 10s; animation-delay: 0.8s; font-size: 1.1rem; }
+.snowflake:nth-child(8)  { left: 75%; animation-duration: 15s; animation-delay: 2.2s; font-size: 1.7rem; }
+.snowflake:nth-child(9)  { left: 85%; animation-duration: 9.5s;animation-delay: 0.3s; font-size: 1.2rem; }
+.snowflake:nth-child(10) { left: 95%; animation-duration: 13.5s;animation-delay: 3.1s; font-size: 1.5rem; }
+
 
 /* Christmas tree */
 .christmas-tree{
