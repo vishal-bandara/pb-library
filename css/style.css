@@ -112,7 +112,7 @@ body::after{
    ========================= */
 header{
   display:flex;
-  align-items:center; /* Ensures vertical centering */
+  align-items:center; /* Ensures vertical centering of logo and hamburger */
   justify-content:space-between;
   padding:14px 18px;
   gap:12px;
@@ -141,7 +141,7 @@ header{
   color:#fffde7;
 }
 
-/* New: Hide the Christmas message by default */
+/* Base state: Ensure the dedicated mobile Christmas message is always hidden unless specifically targeted */
 .mobile-christmas {
   display: none; 
   font-weight: 700;
@@ -198,7 +198,7 @@ nav a:hover {
   /* FIX: Hamburger is now part of the header flow and aligned by flexbox */
   .hamburger {
     display: block; /* Show button on mobile */
-    /* Removed position: fixed, top, and right for correct header alignment */
+    /* Removed fixed positioning for correct header alignment */
   }
 
   nav {
@@ -251,18 +251,23 @@ nav a:hover {
 }
 
 /* =========================
-   Responsive: Mobile Portrait Swap (New Fix)
+   Responsive: Mobile Portrait Swap (Critical Fix Section)
    ========================= */
 @media (max-width: 480px) and (orientation: portrait) {
-    /* 1. Hide the original tagline text (e.g., "Making Learning a Joy.") */
+    /* 1. Hide the standard tagline text */
     .desktop-tagline {
         display: none !important;
     }
 
-    /* 2. Show the Christmas text (e.g., "MERRY CHRISTMAS! 🎄") */
+    /* 2. Show the dedicated mobile-only Christmas text */
     .mobile-christmas {
         display: block !important;
         margin-top: 2px;
+    }
+    
+    /* Ensure the parent p tag has room */
+    .tagline {
+        display: block !important;
     }
 }
 
@@ -503,17 +508,7 @@ footer{
 
 @media (max-width: 420px){
   .book-card img{ height:130px; }
-  /* Logo title fix for extra narrow screens */
   .logo-title h1 { font-size: 1rem; }
-  .logo-title p { 
-    /* Hide the parent p element to prevent extra space if the span swap fails */
-    display: block; 
-  }
-  .desktop-tagline {
-    /* Ensure desktop tagline is hidden if the parent p is visible */
-    display: none; 
-  }
-  /* The mobile-christmas element is handled by the portrait query below */
   .book-card h3{ font-size:0.9rem; }
   .res-table th,
   .res-table td{ font-size:0.82rem; }
