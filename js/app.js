@@ -1,11 +1,11 @@
 // =====================
-// Service Worker registration
+// Service Worker registration (Note: This might be redundant if the block is already in your HTML)
 // =====================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('Service Worker registered', reg))
-      .catch(err => console.error('Service Worker registration failed', err));
+    // navigator.serviceWorker.register('sw.js') // Using full path here for robustness
+    //   .then(reg => console.log('Service Worker registered', reg))
+    //   .catch(err => console.error('Service Worker registration failed', err));
   });
 }
 
