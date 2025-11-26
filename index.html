@@ -1,207 +1,190 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#004080">
 
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>PEOPLES BANK LIBRARY</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>PEOPLES BANK LIBRARY</title>
 
-  <!-- Firebase (compat) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- Snow overlay -->
-  <div class="snow" aria-hidden="true">
-  <div class="snowflake">❄</div>
-  <div class="snowflake">✻</div>
-  <div class="snowflake">❅</div>
-  <div class="snowflake">❄</div>
-  <div class="snowflake">✼</div>
-  <div class="snowflake">❆</div>
-  <div class="snowflake">❄</div>
-  <div class="snowflake">✻</div>
-  <div class="snowflake">❅</div>
-  <div class="snowflake">❄</div>
-  </div>
+    <div class="snow" aria-hidden="true">
+        <div class="snowflake">❄</div>
+        <div class="snowflake">✻</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❄</div>
+        <div class="snowflake">✼</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❄</div>
+        <div class="snowflake">✻</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❄</div>
+    </div>
 
-  <!-- Christmas tree -->
-  <svg class="christmas-tree" viewBox="0 0 120 180" aria-hidden="true">
-    <defs>
-      <linearGradient id="g" x1="0" x2="1">
-        <stop offset="0" stop-color="#4caf50" stop-opacity="0.95" />
-        <stop offset="1" stop-color="#2e7d32" stop-opacity="0.9" />
-      </linearGradient>
-    </defs>
-    <g fill="url(#g)" stroke="rgba(0,0,0,0.06)" stroke-width="1">
-      <polygon points="60,6 90,54 66,54 100,104 74,104 106,154 60,110 14,154 46,104 20,104 54,54 30,54" />
-    </g>
-  </svg>
+    <svg class="christmas-tree" viewBox="0 0 120 180" aria-hidden="true">
+        <defs>
+            <linearGradient id="g" x1="0" x2="1">
+                <stop offset="0" stop-color="#4caf50" stop-opacity="0.95" />
+                <stop offset="1" stop-color="#2e7d32" stop-opacity="0.9" />
+            </linearGradient>
+        </defs>
+        <g fill="url(#g)" stroke="rgba(0,0,0,0.06)" stroke-width="1">
+            <polygon points="60,6 90,54 66,54 100,104 74,104 106,154 60,110 14,154 46,104 20,104 54,54 30,54" />
+        </g>
+    </svg>
 
-  <!-- Header -->
- <header>
-  <div class="logo-title" role="banner">
-    <h1>PEOPLE'S BANK LIBRARY</h1>
-    <p class="tagline">• Merry Christmas 🎄</p>
-  </div>
+    <header>
+        <div class="logo-title">
+         <h1>PEOPLE'S BANK LIBRARY</h1>
+         <p class="tagline">
+           <span class="desktop-tagline">MERRY CHRISTMAS! 🎄</span>
+           <span class="mobile-christmas">MERRY CHRISTMAS! 🎄</span>
+         </p>
+       </div>
 
-    <!-- Hamburger Button (mobile only) -->
-  <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu()">
-    &#9776;
-  </button>
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu()">
+            &#9776;
+        </button>
 
-  <!-- Main Navigation -->
-  <nav id="main-nav" aria-label="Primary">
-    <a href="#home">🏠︎ Home</a>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLScD4MBgjJi0P2nsQ5KNh3lIrhI6FE49zUB242vqYKGieG_2UA/viewform?usp=publish-editor" 
-       target="_blank" 
-       rel="noopener">
-       👤 New Patron
-    </a>
-    <a href="#rules">📃 Rules</a>
-    <a href="#notice-contact">✉ Notice</a>
-    <a href="#contact">☏ Contact</a>
-  </nav>
-</header>
+        <nav id="main-nav" aria-label="Primary">
+            <a href="#home">🏠︎ Home</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScD4MBgjJi0P2nsQ5KNh3lIrhI6FE49zUB242vqYKGieG_2UA/viewform?usp=publish-editor" 
+                target="_blank" 
+                rel="noopener">
+                👤 New Patron
+            </a>
+            <a href="#rules">📃 Rules</a>
+            <a href="#notice-contact">✉ Notice</a>
+            <a href="#contact">☏ Contact</a>
+        </nav>
+    </header>
 
+    <main class="container" id="main">
+        <section id="home" class="section" aria-labelledby="home-title">
+            <h2 id="home-title">New Arrivals</h2>
+            <div id="book-list" class="book-grid" aria-live="polite"></div>
+        </section>
 
+        <section id="rules" class="section" aria-labelledby="rules-title">
+            <h2 id="rules-title">Library Rules & Regulations</h2>
+            <div class="accordion">
+                <div class="acc-item">
+                    <div class="acc-head" onclick="toggleAcc(this)">
+                        <h4>Membership Procedure</h4><span>▾</span>
+                    </div>
+                    <div class="acc-body">
+                        Application forms should be duly completed and signed by the prospective member and the Head of Department / Branch Manager
+                        before handing over to the library. If the recommendation is refused, a valid reason should be given. No person will be admitted
+                        as a member unless she/he is introduced and the declaration signed by the Head of Department / Branch Manager.
+                    </div>
+                </div>
 
-  <main class="container" id="main">
-    <!-- Home / Books -->
-    <section id="home" class="section" aria-labelledby="home-title">
-      <h2 id="home-title">New Arrivals</h2>
-      <div id="book-list" class="book-grid" aria-live="polite"></div>
-    </section>
+                <div class="acc-item">
+                    <div class="acc-head" onclick="toggleAcc(this)">
+                        <h4>Library Tickets & Lending</h4><span>▾</span>
+                    </div>
+                    <div class="acc-body">
+                        Members will be issued two Borrowers Cards. These cards are not transferable and must be presented when borrowing books.
+                        The normal loan period for books is 2 weeks. Books must be returned on or before the due date.
+                    </div>
+                </div>
 
-    <!-- Rules -->
-    <section id="rules" class="section" aria-labelledby="rules-title">
-      <h2 id="rules-title">Library Rules & Regulations</h2>
-      <div class="accordion">
-        <div class="acc-item">
-          <div class="acc-head" onclick="toggleAcc(this)">
-            <h4>Membership Procedure</h4><span>▾</span>
-          </div>
-          <div class="acc-body">
-            Application forms should be duly completed and signed by the prospective member and the Head of Department / Branch Manager
-            before handing over to the library. If the recommendation is refused, a valid reason should be given. No person will be admitted
-            as a member unless she/he is introduced and the declaration signed by the Head of Department / Branch Manager.
-          </div>
-        </div>
+                <div class="acc-item">
+                    <div class="acc-head" onclick="toggleAcc(this)">
+                        <h4>Overdue & Loss</h4><span>▾</span>
+                    </div>
+                    <div class="acc-body">
+                        A fine of Rs.10 per day up to 14 days is charged for overdue books. If the book is not returned thereafter, the cost of the
+                        book plus an additional processing fee will be charged. Loss of a book should be reported immediately to the librarian.
+                    </div>
+                </div>
 
-        <div class="acc-item">
-          <div class="acc-head" onclick="toggleAcc(this)">
-            <h4>Library Tickets & Lending</h4><span>▾</span>
-          </div>
-          <div class="acc-body">
-            Members will be issued two Borrowers Cards. These cards are not transferable and must be presented when borrowing books.
-            The normal loan period for books is 2 weeks. Books must be returned on or before the due date.
-          </div>
-        </div>
-
-        <div class="acc-item">
-          <div class="acc-head" onclick="toggleAcc(this)">
-            <h4>Overdue & Loss</h4><span>▾</span>
-          </div>
-          <div class="acc-body">
-            A fine of Rs.10 per day up to 14 days is charged for overdue books. If the book is not returned thereafter, the cost of the
-            book plus an additional processing fee will be charged. Loss of a book should be reported immediately to the librarian.
-          </div>
-        </div>
-
-        <div class="acc-item">
-          <div class="acc-head" onclick="toggleAcc(this)">
-            <h4>Care of Materials</h4><span>▾</span>
-          </div>
-          <div class="acc-body">
-            Members must handle books and other materials with care. Writing or marking on library materials is strictly prohibited.
-            Any damage noticed should be reported to the library staff at once.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Notice / Contact / Admin -->
-    <section class="section" id="notice-contact" aria-label="Notice and contact">
-      <div class="info-grid">
-        <!-- Notices -->
-        <div class="notice-card">
-          <h3 class="sub-heading">Notices</h3>
-          <ul id="notice-list">
-            <!-- Will be filled from Firestore -->
-          </ul>
-        </div>
-
-        <!-- Contact + Admin -->
-        <div>
-          <div class="contact-card" id="contact">
-            <h3 class="sub-heading">Contact</h3>
-            <p>Developer: <strong>Vishal Bandara</strong></p>
-            <p>
-              <a href="https://vishal-bandara.github.io/vishalbandara/" target="_blank" rel="noopener">
-                About Developer
-              </a>
-            </p>
-            <p>Library Manager: <strong>Menaka Hadunpathirana</strong></p>
-          </div>
-
-          <div class="admin-card" id="admin-card">
-            <h3 class="sub-heading">Admin</h3>
-            <p class="admin-text">Login to review and manage reservations, book names & photos, and notices.</p>
-            <button onclick="adminLogin()">Admin Login</button>
-
-            <!-- Admin panel: Reservations + Manage Books + Manage Notices -->
-            <div id="admin-panel" style="margin-top:12px; display:none;">
-              <h4 class="admin-sub">Reservations</h4>
-              <div id="reservation-wrapper">
-                <table id="reservation-table" class="res-table" aria-live="polite"></table>
-              </div>
-
-              <h4 class="admin-sub" style="margin-top:16px;">Manage Books</h4>
-              <p class="admin-text">Edit book names and photos here. Changes will show for all users.</p>
-              <div id="book-admin-wrapper">
-                <table id="book-admin-table" class="res-table" aria-live="polite"></table>
-              </div>
-
-              <!-- Manage Notices -->
-              <div style="margin-top:16px;">
-                <h4 class="admin-sub">Manage Notices</h4>
-                <p class="admin-text">Add a new notice to the notice panel.</p>
-
-                <textarea id="notice-input" rows="3" placeholder="Type notice here..." style="width:100%;"></textarea>
-                <button style="margin-top:8px;" onclick="addNotice()">Add Notice</button>
-
-                <table id="notice-admin-table" class="res-table" style="margin-top:12px;" aria-live="polite"></table>
-              </div>
+                <div class="acc-item">
+                    <div class="acc-head" onclick="toggleAcc(this)">
+                        <h4>Care of Materials</h4><span>▾</span>
+                    </div>
+                    <div class="acc-body">
+                        Members must handle books and other materials with care. Writing or marking on library materials is strictly prohibited.
+                        Any damage noticed should be reported to the library staff at once.
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer>
-      © PEOPLES BANK LIBRARY · <span id="year"></span>
-    </footer>
-  </main>
+        <section class="section" id="notice-contact" aria-label="Notice and contact">
+            <div class="info-grid">
+                <div class="notice-card">
+                    <h3 class="sub-heading">Notices</h3>
+                    <ul id="notice-list">
+                        </ul>
+                </div>
 
-  <!-- JS -->
-  <script src="js/app.js"></script>
-  <script>
-  if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('Service Worker Registered'))
-      .catch((err) => console.log('Service Worker failed:', err));
-  });
- }
-  </script>
+                <div>
+                    <div class="contact-card" id="contact">
+                        <h3 class="sub-heading">Contact</h3>
+                        <p>Developer: <strong>Vishal Bandara</strong></p>
+                        <p>
+                            <a href="https://vishal-bandara.github.io/vishalbandara/" target="_blank" rel="noopener">
+                                About Developer
+                            </a>
+                        </p>
+                        <p>Library Manager: <strong>Menaka Hadunpathirana</strong></p>
+                    </div>
+
+                    <div class="admin-card" id="admin-card">
+                        <h3 class="sub-heading">Admin</h3>
+                        <p class="admin-text">Login to review and manage reservations, book names & photos, and notices.</p>
+                        <button onclick="adminLogin()">Admin Login</button>
+
+                        <div id="admin-panel" style="margin-top:12px; display:none;">
+                            <h4 class="admin-sub">Reservations</h4>
+                            <div id="reservation-wrapper">
+                                <table id="reservation-table" class="res-table" aria-live="polite"></table>
+                            </div>
+
+                            <h4 class="admin-sub" style="margin-top:16px;">Manage Books</h4>
+                            <p class="admin-text">Edit book names and photos here. Changes will show for all users.</p>
+                            <div id="book-admin-wrapper">
+                                <table id="book-admin-table" class="res-table" aria-live="polite"></table>
+                            </div>
+
+                            <div style="margin-top:16px;">
+                                <h4 class="admin-sub">Manage Notices</h4>
+                                <p class="admin-text">Add a new notice to the notice panel.</p>
+
+                                <textarea id="notice-input" rows="3" placeholder="Type notice here..." style="width:100%;"></textarea>
+                                <button style="margin-top:8px;" onclick="addNotice()">Add Notice</button>
+
+                                <table id="notice-admin-table" class="res-table" style="margin-top:12px;" aria-live="polite"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            © PEOPLES BANK LIBRARY · <span id="year"></span>
+        </footer>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(() => console.log('Service Worker Registered'))
+                    .catch((err) => console.log('Service Worker failed:', err));
+            });
+        }
+    </script>
 
 </body>
 </html>
