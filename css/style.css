@@ -17,13 +17,15 @@ body{
   margin:0;
   font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   background:var(--bg-dark);
-  color:#fff;
+  color:#f9f6f6;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   overflow-x:hidden;
   line-height:1.4;
   padding-bottom:60px;
 }
+/* NOTE: The second, conflicting 'body { background: #000; }' block has been removed here.
+*/
 
 /* =========================
    Liquid animated background
@@ -50,12 +52,6 @@ body::after{
   content:"";
   position:fixed; inset:0; z-index:-2;
   background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.6));
-}
-
-/* snow */
-body {
-  margin: 0;
-  background: #000;   /* black background */
 }
 
 /* FULLSCREEN SNOW CONTAINER */
@@ -139,8 +135,8 @@ header{
   z-index:40;
   backdrop-filter: blur(6px);
   background: linear-gradient(90deg,var(--red),var(--red-2),var(--yellow));
-  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
-  border-bottom:1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 6px 20px rgb(0, 0, 0);
+  border-bottom:1px solid rgb(18, 18, 18);
 }
 
 .logo-title{display:flex;flex-direction:column}
@@ -234,6 +230,7 @@ nav a:hover {
     transition:
       opacity 0.25s ease,
       transform 0.25s ease;
+    z-index: 1000; /* Ensuring it sits under the hamburger, but above content */
   }
 
   /* When opened */
@@ -260,26 +257,41 @@ nav a:hover {
 
 
 /* =========================
-   Accordion (if needed)
+   Accordion
    ========================= */
-.acc-head {
-  cursor: pointer;
-  padding: 8px 12px;
-  background: rgba(255,255,255,0.1);
-  color: #fff;
-  border-radius: 8px;
-  margin-bottom: 4px;
-  font-weight: 600;
+.accordion{
+  display:grid;
+  gap:8px;
 }
-.acc-body {
-  display: none;
-  padding: 6px 12px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 6px;
-  margin-bottom: 6px;
-  color: #fff;
+.acc-item{
+  background:var(--glass);
+  border-radius:10px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.03);
+}
+.acc-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px;
+  cursor:pointer;
+}
+.acc-head h4{
+  margin:0;
+  font-size:0.95rem;
+}
+.acc-body{
+  padding:12px;
+  border-top:1px solid rgba(255,255,255,0.03);
+  display:none; /* Start hidden */
+  font-size:0.94rem;
+  color:#eee;
 }
 
+/* Added: Style to open the accordion body */
+.acc-item.open .acc-body {
+  display: block;
+}
 
 /* =========================
    Layout sections
@@ -354,36 +366,10 @@ nav a:hover {
 }
 
 /* =========================
-   Rules accordion
+   Rules accordion (moved down to combine with other accordion styles)
    ========================= */
-.accordion{
-  display:grid;
-  gap:8px;
-}
-.acc-item{
-  background:var(--glass);
-  border-radius:10px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,0.03);
-}
-.acc-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:12px;
-  cursor:pointer;
-}
-.acc-head h4{
-  margin:0;
-  font-size:0.95rem;
-}
-.acc-body{
-  padding:12px;
-  border-top:1px solid rgba(255,255,255,0.03);
-  display:none;
-  font-size:0.94rem;
-  color:#eee;
-}
+/* .acc-head and .acc-body styles are defined above */
+
 
 /* =========================
    Notices / Contact / Admin
@@ -514,7 +500,7 @@ footer{
 }
 
 @media (max-width: 700px){
-  nav{ display:none; }
+  /* The nav display:none is removed here as it conflicts with mobile transition logic in 768px query */
   .hamburger{ display:block; }
   header{ align-items:flex-start; gap:8px; }
   .logo-title h1{ font-size:1.05rem; }
