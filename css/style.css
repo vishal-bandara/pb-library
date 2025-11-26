@@ -24,8 +24,6 @@ body{
   line-height:1.4;
   padding-bottom:60px;
 }
-/* NOTE: The second, conflicting 'body { background: #000; }' block has been removed here.
-*/
 
 /* =========================
    Liquid animated background
@@ -54,7 +52,7 @@ body::after{
   background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.6));
 }
 
-/* FULLSCREEN SNOW CONTAINER */
+/* SNOW */
 .snow {
   pointer-events: none;
   position: fixed;
@@ -62,8 +60,6 @@ body::after{
   overflow: hidden;
   z-index: 9999;
 }
-
-/* BASE STYLE FOR EACH FLAKE */
 .snowflake {
   position: absolute;
   top: -10%;
@@ -75,31 +71,21 @@ body::after{
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
-
-/* FALL + SWAY COMBINED IN ONE ANIMATION */
 @keyframes snow-fall {
-  0% {
-    transform: translate3d(0, -100%, 0);
-  }
-  50% {
-    transform: translate3d(20px, 50vh, 0);
-  }
-  100% {
-    transform: translate3d(-10px, 110vh, 0);
-  }
+  0% { transform: translate3d(0, -100%, 0); }
+  50% { transform: translate3d(20px, 50vh, 0); }
+  100% { transform: translate3d(-10px, 110vh, 0); }
 }
-
-/* DIFFERENT POSITIONS / SPEEDS / SIZES */
-.snowflake:nth-child(1)  { left: 5%;  animation-duration: 10s; animation-delay: 0s;   font-size: 1.2rem; }
-.snowflake:nth-child(2)  { left: 15%; animation-duration: 12s; animation-delay: 2s;   font-size: 1.4rem; }
-.snowflake:nth-child(3)  { left: 25%; animation-duration: 9s;  animation-delay: 1s;   font-size: 1rem; }
-.snowflake:nth-child(4)  { left: 35%; animation-duration: 13s; animation-delay: 3s;   font-size: 1.8rem; }
-.snowflake:nth-child(5)  { left: 45%; animation-duration: 11s; animation-delay: 1.5s; font-size: 1.3rem; }
-.snowflake:nth-child(6)  { left: 55%; animation-duration: 14s; animation-delay: 2.5s; font-size: 1.9rem; }
-.snowflake:nth-child(7)  { left: 65%; animation-duration: 10s; animation-delay: 0.8s; font-size: 1.1rem; }
-.snowflake:nth-child(8)  { left: 75%; animation-duration: 15s; animation-delay: 2.2s; font-size: 1.7rem; }
-.snowflake:nth-child(9)  { left: 85%; animation-duration: 9.5s;animation-delay: 0.3s; font-size: 1.2rem; }
-.snowflake:nth-child(10) { left: 95%; animation-duration: 13.5s;animation-delay: 3.1s; font-size: 1.5rem; }
+.snowflake:nth-child(1) { left: 5%; animation-duration: 10s; animation-delay: 0s; font-size: 1.2rem; }
+.snowflake:nth-child(2) { left: 15%; animation-duration: 12s; animation-delay: 2s; font-size: 1.4rem; }
+.snowflake:nth-child(3) { left: 25%; animation-duration: 9s; animation-delay: 1s; font-size: 1rem; }
+.snowflake:nth-child(4) { left: 35%; animation-duration: 13s; animation-delay: 3s; font-size: 1.8rem; }
+.snowflake:nth-child(5) { left: 45%; animation-duration: 11s; animation-delay: 1.5s; font-size: 1.3rem; }
+.snowflake:nth-child(6) { left: 55%; animation-duration: 14s; animation-delay: 2.5s; font-size: 1.9rem; }
+.snowflake:nth-child(7) { left: 65%; animation-duration: 10s; animation-delay: 0.8s; font-size: 1.1rem; }
+.snowflake:nth-child(8) { left: 75%; animation-duration: 15s; animation-delay: 2.2s; font-size: 1.7rem; }
+.snowflake:nth-child(9) { left: 85%; animation-duration: 9.5s; animation-delay: 0.3s; font-size: 1.2rem; }
+.snowflake:nth-child(10) { left: 95%; animation-duration: 13.5s; animation-delay: 3.1s; font-size: 1.5rem; }
 
 
 /* Christmas tree */
@@ -126,7 +112,7 @@ body::after{
    ========================= */
 header{
   display:flex;
-  align-items:center;
+  align-items:center; /* Ensures vertical centering */
   justify-content:space-between;
   padding:14px 18px;
   gap:12px;
@@ -191,9 +177,6 @@ nav a:hover {
   padding: 8px 14px;
   border-radius: 10px;
   cursor: pointer;
-  position: fixed;
-  top: 12px;
-  right: 12px;
   z-index: 1100;
 }
 
@@ -202,13 +185,15 @@ nav a:hover {
    ========================= */
 @media (max-width: 768px) {
 
+  /* FIX: Hamburger is now part of the header flow and aligned by flexbox */
   .hamburger {
-    display: block;
+    display: block; /* Show button on mobile */
+    /* Removed position: fixed, top, and right for correct header alignment */
   }
 
   nav {
     position: fixed;
-    top: 70px;
+    top: 70px; /* Adjust this value if the dropdown menu position needs fine-tuning */
     right: 12px;
     width: 220px;
     display: flex;
@@ -221,23 +206,23 @@ nav a:hover {
     background: rgba(0, 0, 0, 0.767);
     backdrop-filter: blur(8px);
 
-    /* Start hidden */
+    /* Start hidden (CRITICAL for mobile) */
     opacity: 0;
     transform: scale(0.4);
     transform-origin: top right;
-    pointer-events: none;
+    pointer-events: none; /* Disables interaction when hidden */
 
     transition:
       opacity 0.25s ease,
       transform 0.25s ease;
-    z-index: 1000; /* Ensuring it sits under the hamburger, but above content */
+    z-index: 1000;
   }
 
-  /* When opened */
+  /* When opened (CRITICAL for mobile) */
   nav.open {
     opacity: 1;
     transform: scale(1);
-    pointer-events: auto;
+    pointer-events: auto; /* Enables interaction when visible */
   }
 
   /* Mobile link styles */
@@ -283,12 +268,12 @@ nav a:hover {
 .acc-body{
   padding:12px;
   border-top:1px solid rgba(255,255,255,0.03);
-  display:none; /* Start hidden */
+  display:none; /* Start hidden in CSS */
   font-size:0.94rem;
   color:#eee;
 }
 
-/* Added: Style to open the accordion body */
+/* Style to open the accordion body */
 .acc-item.open .acc-body {
   display: block;
 }
@@ -364,12 +349,6 @@ nav a:hover {
   color:#333;
   cursor:not-allowed;
 }
-
-/* =========================
-   Rules accordion (moved down to combine with other accordion styles)
-   ========================= */
-/* .acc-head and .acc-body styles are defined above */
-
 
 /* =========================
    Notices / Contact / Admin
@@ -474,8 +453,19 @@ footer{
   margin-top:16px;
 }
 /* =========================
-   Fix mobile zoom issues
+   Responsive
    ========================= */
+@media (max-width: 900px){
+  .info-grid{ grid-template-columns: 1fr; }
+  .book-card img{ height:150px; }
+}
+
+@media (max-width: 700px){
+  header{ align-items:flex-start; gap:8px; }
+  .logo-title h1{ font-size:1.05rem; }
+  .book-grid{ grid-template-columns: repeat(auto-fill,minmax(140px,1fr)); }
+}
+
 @media (max-width: 480px){
   .container{
     padding: 0 8px;
@@ -485,32 +475,16 @@ footer{
   }
 }
 
-@media (max-width: 380px){
-  .book-grid{
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  }
-}
-
-/* =========================
-   Responsive
-   ========================= */
-@media (max-width: 900px){
-  .info-grid{ grid-template-columns: 1fr; }
-  .book-card img{ height:150px; }
-}
-
-@media (max-width: 700px){
-  /* The nav display:none is removed here as it conflicts with mobile transition logic in 768px query */
-  .hamburger{ display:block; }
-  header{ align-items:flex-start; gap:8px; }
-  .logo-title h1{ font-size:1.05rem; }
-  .book-grid{ grid-template-columns: repeat(auto-fill,minmax(140px,1fr)); }
-}
-
-@media (max-width:420px){
+@media (max-width: 420px){
   .book-card img{ height:130px; }
   .logo-title p{ display:none; }
   .book-card h3{ font-size:0.9rem; }
   .res-table th,
   .res-table td{ font-size:0.82rem; }
+}
+
+@media (max-width: 380px){
+  .book-grid{
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
 }
