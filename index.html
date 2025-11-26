@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,21 +47,29 @@
 
   <!-- Header -->
   <header>
-    <div class="logo-title" role="banner">
-      <h1>PEOPLE'S BANK LIBRARY</h1>
-      <p class="tagline">• Merry Christmas 🎄</p>
-    </div>
+  <div class="logo-title" role="banner">
+    <h1>PEOPLE'S BANK LIBRARY</h1>
+    <p class="tagline">• Merry Christmas 🎄</p>
+  </div>
 
-    <nav id="main-nav" aria-label="Primary">
-      <a href="#home">Home</a>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScD4MBgjJi0P2nsQ5KNh3lIrhI6FE49zUB242vqYKGieG_2UA/viewform?usp=publish-editor" target="_blank" rel="noopener">New Patron</a>
-      <a href="#rules">Rules</a>
-      <a href="#notice-contact">Notice</a>
-      <a href="#contact">Contact</a>
-    </nav>
+    <!-- Hamburger Button (mobile only) -->
+  <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu()">
+    &#9776;
+  </button>
 
-    <button class="hamburger" aria-label="Open menu" onclick="toggleMenu()">☰</button>
-  </header>
+  <!-- Main Navigation -->
+  <nav id="main-nav" aria-label="Primary">
+    <a href="#home">🏠︎ Home</a>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScD4MBgjJi0P2nsQ5KNh3lIrhI6FE49zUB242vqYKGieG_2UA/viewform?usp=publish-editor" 
+       target="_blank" 
+       rel="noopener">
+       👤 New Patron
+    </a>
+    <a href="#rules">📃 Rules</a>
+    <a href="#notice-contact">✉ Notice</a>
+    <a href="#contact">☏ Contact</a>
+  </nav>
+</header>
 
   <main class="container" id="main">
     <!-- Home / Books -->
